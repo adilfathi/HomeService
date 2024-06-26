@@ -19,6 +19,11 @@ if ($result->num_rows > 0) {
         $services[] = $row;
     }
 }
+
+// Function to format currency to Rupiah
+function formatRupiah($amount) {
+    return "Rp " . number_format($amount, 0, ',', '.');
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -49,46 +54,9 @@ if ($result->num_rows > 0) {
   </style>
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">Home Service</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Layanan</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Kontak</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="statuspesanan.php">Status Pesanan</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Notifikasi</a>
-          </li>
-          <?php if (isset($_SESSION['is_login']) || isset($_COOKIE['_logged'])): ?>
-            <li class="nav-item">
-              <a class="btn btn-custom" href="?logout">Keluar</a>
-            </li>
-          <?php else: ?>
-            <li class="nav-item">
-              <a class="nav-link" href="register.php">Daftar</a>
-            </li>
-            <li class="nav-item">
-              <a class="btn btn-custom" href="login.php">Login</a>
-            </li>
-          <?php endif; ?>
-        </ul>
-      </div>
-    </div>
-  </nav>
+<?php 
+    include 'navbar.php'; ?>
+  
   <div class="container mt-5 justify-content-center" id="ppp">
     <img src="assets/banner.jpg" class="img-fluid">
     <div class="container mt-5">
@@ -102,7 +70,7 @@ if ($result->num_rows > 0) {
               <div class="card-body">
                 <h5 class="card-title text-center mt-5"><?php echo $service['name']; ?></h5>
                 <p class="card-text"><?php echo $service['description']; ?></p>
-                <p class="card-text"><strong><?php echo $service['price']; ?></strong></p>
+                <p class="card-text"><strong> Mulai Dari Harga <?php echo formatRupiah($service['price']); ?></strong></p>
                 <div class="d-grid">
                   <button type="button" class="btn btn-primary btn-block" data-bs-toggle="modal"
                     data-bs-target="#modal<?php echo $service['id']; ?>">Book Now</button>
@@ -138,6 +106,51 @@ if ($result->num_rows > 0) {
       </div>
     </div>
   <?php endforeach; ?>
+  <div class="container mt-5" style="background-color: beige;">
+        <div class="row gx-1 justify-content-between">
+          <div class="col-md-6 mt-5">
+            <h1>Kepuasan Pelanggan Terjamin</h1>
+            <p class="mt-5" style="font-size: large;">Home Service adalah layanan jasa kebersihan dan pembersihan yang bertujuan untuk memudahkan
+              pelanggan dalam membersihkan rumah, kos, gedung dengan kualitas terbaik dan harga terjangkau.</p>
+          </div>
+          <div class="col-md-6">
+            <img src="assets/cleaner.png" alt="" class="img-responsive center-block">
+          </div>
+        </div>
+      </div>
+      <div class="container mt-5 justify-content-center">
+        <div class="row justify-content-center">
+          <div class="col-12">
+            <h1 class="text-center">Rumah Bersih Dengan 1x Klik</h1>
+            <div class="container">
+              <div class="card-group mt-5">
+                <div class="card">
+                  <img src="assets/telp.png" class="card-img-top" alt="General Cleaning">
+                  <div class="card-body">
+                    <h5 class="card-title text-center mt-5">Pesan</h5>
+                    <p>Pesan berbagai macam layanan jasa kebersihan dan perawatan peralatan rumah Anda melalui web Home
+                      Service</p>
+                  </div>
+                </div>
+                <div class="card">
+                  <img src="assets/chat.png" class="card-img-top" alt="Chat" style="height: 400px;">
+                  <div class="card-body">
+                    <h5 class="card-title text-center mt-5">Chat</h5>
+                    <p>Sambil menunggu layanan jasa tiba di rumah Anda, bisa chat dengan helper kami melalui fitur chat di web Home Service</p>
+                  </div>
+                </div>
+                <div class="card">
+                  <img src="assets/enjoy.png" class="card-img-top" alt="Enjoy">
+                  <div class="card-body">
+                    <h5 class="card-title text-center mt-5">Enjoy</h5>
+                    <p>Kami melakukan perawatan dan pembersihan rumah dengan maksimal. Dibekali dengan perlengkapan cleaning service, semuanya dilakukan secara profesional untuk kualitas hasil yang memuaskan</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

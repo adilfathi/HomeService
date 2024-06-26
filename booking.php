@@ -50,7 +50,20 @@
 <body>
 <?php
     require 'connect.php'; 
-    include 'navbar.php'; ?>
+    include 'navbar.php';
+
+    // Fetch services from the database
+    $sql = "SELECT * FROM services";
+    $result = $connect->query($sql);
+
+    $services = [];
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $services[] = $row;
+        }
+    }
+?>
+    
     <div class="container mt-5">
         <div class="form-container">
             <h2 class="form-title">Booking Form</h2>
@@ -65,16 +78,12 @@
                 $duration = $_POST['duration'];
                 $paymentMethod = $_POST['paymentMethod'];
                 $totalPrice = $_POST['total'];
+                $user_id = $_SESSION['user_id'];
 
                 $totalPrice = str_replace('Rp ', '', $totalPrice); // Hapus 'Rp '
                 $totalPrice = str_replace('.', '', $totalPrice); // Hapus pemisah ribuan            
 
                 $minDuration = 2;
-                $prices = [
-                    'cleaning' => 65000,
-                    'dishwash' => 50000,
-                    'carwash' => 100000,
-                ];
 
                 $startTimeObj = new DateTime($startTime);
                 $endTimeObj = clone $startTimeObj;
@@ -90,8 +99,9 @@
                 } elseif ($startTimeObj > $lastOrderTime && $duration > 2) {
                     echo '<div class="alert alert-danger">Pukul 19:00 adalah last order untuk 2 jam, berakhir pada pukul 21:00 WIB.</div>';
                 } else {
-                    $sql = "INSERT INTO bookings (name, address, service_type, cleaning_spec, date, start_time, duration, payment_method, total) 
-            VALUES ('$name', '$address', '$serviceType', '$cleaningSpec', '$date', '$startTime', '$duration', '$paymentMethod', '$totalPrice')";
+                    $sql = "INSERT INTO bookings (user_id, name, address, service_type, cleaning_spec, date, start_time, duration, payment_method, total) 
+        VALUES ('$user_id', '$name', '$address', '$serviceType', '$cleaningSpec', '$date', '$startTime', '$duration', '$paymentMethod', '$totalPrice')";
+
 
                     if (mysqli_query($connect, $sql)) {
                         echo '<div class="alert alert-success">Pemesanan berhasil! Total yang harus dibayarkan adalah Rp ' . number_format($totalPrice, 0, ',', '.') . '.</div>';
@@ -114,9 +124,11 @@
                     <label for="serviceType" class="form-label">Jenis Layanan</label>
                     <select class="form-select" id="serviceType" name="serviceType" required>
                         <option value="" selected>Pilih jenis layanan</option>
-                        <option value="GenerakClean" data-price="65000">General Cleaning</option>
-                        <option value="DishWash" data-price="50000">Dish Wash</option>
-                        <option value="CarWash" data-price="100000">Car Wash</option>
+                        <?php foreach ($services as $service): ?>
+                            <option value="<?php echo $service['id']; ?>" data-price="<?php echo $service['price']; ?>">
+                                <?php echo $service['name']; ?>
+                            </option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
                 <div class="mb-3">

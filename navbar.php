@@ -1,3 +1,16 @@
+<?php
+require_once 'connect.php';
+
+// Contoh kondisi status login (disesuaikan dengan logika sesungguhnya)
+$is_admin = isset($_SESSION['role']) && $_SESSION['role'] == 'Admin';
+$is_logged_in = isset($_SESSION['is_login']) || isset($_COOKIE['_logged']);
+
+// Pesan contoh, bisa disesuaikan dengan logika notifikasi yang sesungguhnya
+$notification_count = 0; // Ganti dengan jumlah notifikasi yang sebenarnya
+
+// Tentukan kelas untuk navbar sesuai dengan peran pengguna
+$navbar_class = $is_admin ? 'navbar navbar-expand-lg navbar-dark bg-dark' : 'navbar navbar-expand-lg navbar-light bg-light';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,8 +30,13 @@
             color: black;
         }
 
+        .navbar-dark .navbar-nav .nav-link {
+            color: white;
+        }
+
         .dropdown-menu {
-            width: 300px; /* Adjust width as needed */
+            width: 300px;
+            /* Adjust width as needed */
         }
 
         .notification-item {
@@ -44,7 +62,7 @@
 
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="<?php echo $navbar_class; ?>">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Home Service</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,21 +79,30 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">Kontak</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="statuspesanan.php">Status Pesanan</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="notification.php">Notifikasi</a>
-                    </li>
-                    <!-- <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-bell"></i> Icon notifikasi -->
-                            <!-- <span class="badge bg-danger" id="notification-count">0</span>  Contoh badge jumlah notifikasi -->
-                        <!-- </a> -->
-                        <!-- <ul class="dropdown-menu" aria-labelledby="navbarDropdown" id="notifications"> -->
-                            <!-- <li class="dropdown-item text-center">Memuat...</li> Pesan saat memuat notifikasi -->
-                        <!-- </ul> -->
-                    <!-- </li> --> 
+                    <?php if ($is_logged_in): ?>
+                        <?php if ($is_admin): ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="add_service.php">Add Service</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="statuspesanan.php">Pesanan</a>
+                            </li>
+                        <?php else: ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="my_orders.php">My Orders</a>
+                            </li>
+                        <?php endif; ?>
+                        <li class="nav-item">
+                            <a class="btn btn-custom" href="?logout">Keluar</a>
+                        </li>
+                    <?php else: ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="register.php">Daftar</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-custom" href="login.php">Login</a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>
@@ -83,29 +110,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <!-- <script>
-        // Ajax untuk memuat data notifikasi saat halaman dimuat
-        $(document).ready(function () {
-            loadNotifications();
-        });
 
-        function loadNotifications() {
-            $.ajax({
-                url: 'fetch_notifications.php', // Ganti dengan file yang memuat data notifikasi dari database
-                type: 'GET',
-                success: function (response) {
-                    $('#notifications').html(response);
-                    updateNotificationCount(); // Update jumlah notifikasi
-                }
-            });
-        }
-
-        // Fungsi untuk mengupdate jumlah notifikasi
-        function updateNotificationCount() {
-            var count = $('#notifications .notification-item').length;
-            $('#notification-count').text(count);
-        }
-    </script> -->
 </body>
 
 </html>
