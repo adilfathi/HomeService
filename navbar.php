@@ -82,10 +82,13 @@ $navbar_class = $is_admin ? 'navbar navbar-expand-lg navbar-dark bg-dark' : 'nav
                     <?php if ($is_logged_in): ?>
                         <?php if ($is_admin): ?>
                             <li class="nav-item">
-                                <a class="nav-link" href="add_service.php">Add Service</a>
+                                <a class="nav-link" href="statuspesanan.php">Pesanan</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="statuspesanan.php">Pesanan</a>
+                                <a class="nav-link" href="admin.php">User Control</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="manage_services.php">Manage Service</a>
                             </li>
                         <?php else: ?>
                             <li class="nav-item">
